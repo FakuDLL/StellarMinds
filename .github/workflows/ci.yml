@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore backend
+        run: dotnet restore SistemaStellarMinds/SistemaStellarMinds.sln
+
+      - name: Restore MVC
+        run: dotnet restore StellarMinds.WebApp/StellarMinds.WebApp.csproj
+
+      - name: Build backend
+        run: dotnet build SistemaStellarMinds/SistemaStellarMinds.sln --configuration Release --no-restore
+
+      - name: Build MVC
+        run: dotnet build StellarMinds.WebApp/StellarMinds.WebApp.csproj --configuration Release --no-restore

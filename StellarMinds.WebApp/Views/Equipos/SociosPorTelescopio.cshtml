@@ -1,0 +1,50 @@
+@model SociosPorTelescopioViewModel
+@{
+    ViewData["Title"] = "Socios por telescopio";
+}
+
+<h1>Socios por telescopio</h1>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5">
+        <label asp-for="TelescopioId" class="form-label">Telescopio</label>
+        <select asp-for="TelescopioId" name="telescopioId" class="form-select" asp-items="@(new SelectList(Model.Telescopios, "Id", "Modelo"))">
+            <option value="">Seleccione un telescopio</option>
+        </select>
+    </div>
+    <div class="col-md-2 align-self-end">
+        <button class="btn btn-primary" type="submit">Consultar</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.Mensaje))
+{
+    <div class="alert alert-info">@Model.Mensaje</div>
+}
+
+@if (Model.Socios.Any())
+{
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre completo</th>
+                <th>Email</th>
+                <th>Nombre usuario</th>
+                <th>Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var socio in Model.Socios)
+            {
+                <tr>
+                    <td>@socio.Id</td>
+                    <td>@socio.NombreCompleto</td>
+                    <td>@socio.Email</td>
+                    <td>@socio.NombreUsuario</td>
+                    <td>@socio.Rol</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

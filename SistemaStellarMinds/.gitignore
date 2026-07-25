@@ -1,0 +1,17 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build
+**/bin/
+**/obj/
+
+# Archivos temporales
+*.log
+
+# Proyecto del profesor 
+
+# Copilot / herramientas 
+.github/copilot-instructions.md
+.github/upgrades/

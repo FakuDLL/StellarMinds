@@ -1,0 +1,37 @@
+@model AuditoriaDetalleViewModel
+@{
+    ViewData["Title"] = "Detalle auditoria";
+}
+
+<h1>Detalle de auditoria</h1>
+
+@if (!string.IsNullOrWhiteSpace(Model.Mensaje))
+{
+    <div class="alert alert-info">@Model.Mensaje</div>
+}
+
+@if (Model.Auditoria != null)
+{
+    <dl class="row">
+        <dt class="col-sm-3">Id</dt>
+        <dd class="col-sm-9">@Model.Auditoria.Id</dd>
+        <dt class="col-sm-3">PrestamoId</dt>
+        <dd class="col-sm-9">@Model.Auditoria.PrestamoId</dd>
+        <dt class="col-sm-3">Accion</dt>
+        <dd class="col-sm-9">@Model.Auditoria.Accion</dd>
+        <dt class="col-sm-3">Fecha</dt>
+        <dd class="col-sm-9">@Model.Auditoria.Fecha</dd>
+        <dt class="col-sm-3">Coordinador</dt>
+        <dd class="col-sm-9">@Model.Auditoria.CoordinadorNombre (@Model.Auditoria.CoordinadorId)</dd>
+        <dt class="col-sm-3">Socio</dt>
+        <dd class="col-sm-9">@Model.Auditoria.SocioNombre (@Model.Auditoria.SocioId)</dd>
+        <dt class="col-sm-3">Fecha inicio prestamo</dt>
+        <dd class="col-sm-9">@Model.Auditoria.PrestamoFechaInicio</dd>
+        <dt class="col-sm-3">Fecha fin prestamo</dt>
+        <dd class="col-sm-9">@Model.Auditoria.PrestamoFechaFin</dd>
+        <dt class="col-sm-3">Estado prestamo</dt>
+        <dd class="col-sm-9">@Model.Auditoria.PrestamoEstado</dd>
+    </dl>
+}
+
+<a class="btn btn-secondary" asp-action="Index">Volver al listado</a>

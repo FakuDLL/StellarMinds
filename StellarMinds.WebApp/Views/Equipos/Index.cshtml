@@ -1,0 +1,67 @@
+@model EquipoListadoViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Equipos";
+    var rol = HttpContextAccessor.HttpContext?.Session.GetString("Rol");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Equipos</h1>
+    @if (rol == "Administrador")
+    {
+        <a class="btn btn-primary" asp-action="Create">Nuevo equipo</a>
+    }
+</div>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="tipo" class="form-select">
+            <option value="">Todos</option>
+            <option value="telescopio" selected="@(Model.Tipo == "telescopio")">Telescopios</option>
+            <option value="montura" selected="@(Model.Tipo == "montura")">Monturas</option>
+            <option value="camara" selected="@(Model.Tipo == "camara")">Cámaras</option>
+            <option value="ocular" selected="@(Model.Tipo == "ocular")">Oculares</option>
+        </select>
+    </div>
+    <div class="col-auto"><button class="btn btn-secondary" type="submit">Filtrar</button></div>
+</form>
+
+<table class="table table-sm table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tipo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Disponible</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var equipo in Model.Equipos)
+        {
+            <tr>
+                <td>@equipo.Id</td>
+                <td>@equipo.TipoEquipo</td>
+                <td>@equipo.Marca</td>
+                <td>@equipo.Modelo</td>
+                <td>@equipo.CantidadDisponible</td>
+                <td class="text-end">
+                    @if (rol == "Administrador")
+                    {
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@equipo.Id">Editar</a>
+                        <form asp-action="Delete" asp-route-id="@equipo.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Baja</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

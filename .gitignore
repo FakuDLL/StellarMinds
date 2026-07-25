@@ -1,0 +1,53 @@
+# Visual Studio
+.vs/
+**/.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.cache
+*.bak
+tmp/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Local tool/cache folders
+.agents/
+.codex/
+
+# Copilot/tool-generated local metadata
+**/.github/copilot-instructions.md
+**/.github/upgrades/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+**/appsettings.*.local.json
+**/secrets.json
+**/*.pubxml.user
+**/*.publishsettings
+**/*.pfx
+**/*.p12
+**/*.pem
+**/*.key
+
+# Local database and deployment artifacts
+**/*.mdf
+**/*.ldf
+**/*.db
+**/*.sqlite
+**/publish/

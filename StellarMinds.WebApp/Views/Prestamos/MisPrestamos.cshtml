@@ -1,0 +1,68 @@
+@model MisPrestamosViewModel
+@{
+    ViewData["Title"] = "Mis prestamos";
+}
+
+<h1>Mis prestamos</h1>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-2">
+        <label asp-for="Mes" class="form-label"></label>
+        <input asp-for="Mes" class="form-control" min="1" max="12" />
+        <span asp-validation-for="Mes" class="text-danger"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="Anio" class="form-label"></label>
+        <input asp-for="Anio" class="form-control" min="2000" max="2100" />
+        <span asp-validation-for="Anio" class="text-danger"></span>
+    </div>
+    <div class="col-md-2 align-self-end">
+        <button class="btn btn-primary" type="submit">Consultar</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.Mensaje))
+{
+    <div class="alert alert-info">@Model.Mensaje</div>
+}
+
+@if (Model.Prestamos.Any())
+{
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Id prestamo</th>
+                <th>Socio</th>
+                <th>TelescopioId</th>
+                <th>MonturaId</th>
+                <th>CamaraId</th>
+                <th>OcularId</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Estado</th>
+                <th>Esta atrasado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prestamo in Model.Prestamos)
+            {
+                <tr>
+                    <td>@prestamo.Id</td>
+                    <td>@prestamo.SocioNombre</td>
+                    <td>@prestamo.TelescopioId</td>
+                    <td>@prestamo.MonturaId</td>
+                    <td>@prestamo.CamaraId</td>
+                    <td>@prestamo.OcularId</td>
+                    <td>@prestamo.FechaInicio.ToShortDateString()</td>
+                    <td>@prestamo.FechaFin.ToShortDateString()</td>
+                    <td>@prestamo.Estado</td>
+                    <td>@(prestamo.EstaAtrasado ? "Si" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

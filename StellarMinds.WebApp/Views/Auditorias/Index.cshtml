@@ -1,0 +1,48 @@
+@model AuditoriaListadoViewModel
+@{
+    ViewData["Title"] = "Auditoria";
+}
+
+<h1>Auditoria de prestamos</h1>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <label asp-for="CoordinadorId" class="form-label">Coordinador Id</label>
+        <input asp-for="CoordinadorId" class="form-control" />
+    </div>
+    <div class="col-md-3 align-self-end">
+        <button class="btn btn-primary" type="submit">Filtrar</button>
+        <a class="btn btn-secondary" asp-action="Index">Limpiar</a>
+    </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.Mensaje))
+{
+    <div class="alert alert-info">@Model.Mensaje</div>
+}
+
+<table class="table table-sm table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Prestamo</th>
+            <th>Accion</th>
+            <th>Fecha</th>
+            <th>Coordinador</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var auditoria in Model.Auditorias)
+        {
+            <tr>
+                <td>@auditoria.Id</td>
+                <td>@auditoria.PrestamoId</td>
+                <td>@auditoria.Accion</td>
+                <td>@auditoria.Fecha</td>
+                <td>@auditoria.CoordinadorNombre (@auditoria.CoordinadorId)</td>
+                <td><a asp-action="Details" asp-route-id="@auditoria.Id">Detalle</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

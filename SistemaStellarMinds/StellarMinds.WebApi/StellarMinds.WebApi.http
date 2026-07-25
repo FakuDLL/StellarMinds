@@ -1,0 +1,6 @@
+@StellarMinds.WebApii_HostAddress = http://localhost:5015
+
+GET {{StellarMinds.WebApii_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

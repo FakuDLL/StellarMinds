@@ -1,0 +1,53 @@
+@model DevolucionPrestamoViewModel
+@{
+    ViewData["Title"] = "Devolución";
+}
+
+<h1>Devolución de préstamo</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-6">
+        <select asp-for="SocioId" name="socioId" class="form-select" asp-items="@(new SelectList(Model.Socios, "Id", "NombreCompleto"))">
+            <option value="">Seleccione socio</option>
+        </select>
+    </div>
+    <div class="col-auto"><button class="btn btn-secondary" type="submit">Buscar préstamos</button></div>
+</form>
+
+<table class="table table-sm table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Socio</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prestamo in Model.Prestamos)
+        {
+            <tr>
+                <td>@prestamo.Id</td>
+                <td>@prestamo.SocioNombre</td>
+                <td>@prestamo.FechaInicio.ToShortDateString()</td>
+                <td>@prestamo.FechaFin.ToShortDateString()</td>
+                <td>@prestamo.Estado</td>
+                <td>
+                    <form asp-action="Devolver" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="prestamoId" value="@prestamo.Id" />
+                        <input type="hidden" name="socioId" value="@Model.SocioId" />
+                        <button class="btn btn-sm btn-primary" type="submit">Devolver</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

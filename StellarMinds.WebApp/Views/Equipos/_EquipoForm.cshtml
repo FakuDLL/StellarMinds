@@ -1,0 +1,75 @@
+@model EquipoFormViewModel
+
+<form method="post" class="col-md-8">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="TipoEquipo" class="form-label"></label>
+            <select asp-for="TipoEquipo" class="form-select" id="tipoEquipo">
+                <option value="telescopio">Telescopio</option>
+                <option value="montura">Montura</option>
+                <option value="camara">Cámara</option>
+                <option value="ocular">Ocular</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Marca" class="form-label"></label>
+            <input asp-for="Marca" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Modelo" class="form-label"></label>
+            <input asp-for="Modelo" class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CantidadDisponible" class="form-label"></label>
+        <input asp-for="CantidadDisponible" class="form-control" />
+    </div>
+
+    <div class="equipo-campos" data-tipo="telescopio">
+        <h5>Telescopio</h5>
+        <div class="row">
+            <div class="col-md-3 mb-3"><label asp-for="AperturaMm" class="form-label"></label><input asp-for="AperturaMm" class="form-control" /></div>
+            <div class="col-md-3 mb-3"><label asp-for="RelacionFocal" class="form-label"></label><input asp-for="RelacionFocal" class="form-control" /></div>
+            <div class="col-md-3 mb-3"><label asp-for="DistanciaFocalMm" class="form-label"></label><input asp-for="DistanciaFocalMm" class="form-control" /></div>
+            <div class="col-md-3 mb-3"><label asp-for="PesoKg" class="form-label"></label><input asp-for="PesoKg" class="form-control" /></div>
+        </div>
+    </div>
+    <div class="equipo-campos" data-tipo="montura">
+        <h5>Montura</h5>
+        <div class="row">
+            <div class="col-md-4 mb-3"><label asp-for="TipoMontura" class="form-label"></label><input asp-for="TipoMontura" class="form-control" /></div>
+            <div class="col-md-4 mb-3"><label asp-for="CargaUtilKg" class="form-label"></label><input asp-for="CargaUtilKg" class="form-control" /></div>
+            <div class="col-md-4 mb-3 form-check mt-4"><input asp-for="EsComputarizado" class="form-check-input" /><label asp-for="EsComputarizado" class="form-check-label"></label></div>
+        </div>
+    </div>
+    <div class="equipo-campos" data-tipo="camara">
+        <h5>Cámara</h5>
+        <div class="row">
+            <div class="col-md-4 mb-3"><label asp-for="TipoSensor" class="form-label"></label><input asp-for="TipoSensor" class="form-control" /></div>
+            <div class="col-md-4 mb-3"><label asp-for="Resolucion" class="form-label"></label><input asp-for="Resolucion" class="form-control" /></div>
+            <div class="col-md-4 mb-3"><label asp-for="TamanoPixelMicras" class="form-label"></label><input asp-for="TamanoPixelMicras" class="form-control" /></div>
+        </div>
+    </div>
+    <div class="equipo-campos" data-tipo="ocular">
+        <h5>Ocular</h5>
+        <div class="row">
+            <div class="col-md-6 mb-3"><label asp-for="DiametroMm" class="form-label"></label><input asp-for="DiametroMm" class="form-control" /></div>
+            <div class="col-md-6 mb-3"><label asp-for="AnguloVisionGrados" class="form-label"></label><input asp-for="AnguloVisionGrados" class="form-control" /></div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Volver</a>
+</form>
+
+<script>
+    function mostrarCamposEquipo() {
+        const tipo = document.getElementById('tipoEquipo').value.toLowerCase();
+        document.querySelectorAll('.equipo-campos').forEach(x => x.style.display = x.dataset.tipo === tipo ? 'block' : 'none');
+    }
+    document.getElementById('tipoEquipo').addEventListener('change', mostrarCamposEquipo);
+    mostrarCamposEquipo();
+</script>

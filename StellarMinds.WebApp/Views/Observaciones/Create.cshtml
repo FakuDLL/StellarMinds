@@ -1,0 +1,118 @@
+@model AltaObservacionViewModel
+@{
+    ViewData["Title"] = "Alta observación";
+}
+
+<h1>Alta de observación</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form asp-action="Create" method="post" id="observacionForm" class="col-md-8">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="Indicador" type="hidden" id="indicador" />
+    <input asp-for="Detalle" type="hidden" id="detalle" />
+    <input asp-for="EvaluacionVigente" type="hidden" id="evaluacionVigente" />
+
+    <div class="mb-3">
+        <label asp-for="PrestamoId" class="form-label">Préstamo vigente</label>
+        <select asp-for="PrestamoId" class="form-select eval-input" asp-items="@(new SelectList(Model.Prestamos, "Id", "Id"))">
+            <option value="">Seleccione préstamo</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ObjetoCelesteId" class="form-label">Objeto celeste</label>
+        <select asp-for="ObjetoCelesteId" class="form-select eval-input" asp-items="@(new SelectList(Model.ObjetosCelestes, "Id", "Nombre"))">
+            <option value="">Seleccione objeto</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Fecha" class="form-label"></label>
+        <input asp-for="Fecha" class="form-control eval-input" type="date" />
+    </div>
+
+    <div id="evaluacionBox" class="alert @(Model.EvaluacionVigente ? "alert-info" : "alert-secondary")">
+        @if (Model.EvaluacionVigente)
+        {
+            <strong>@Model.Indicador</strong>
+            <span>@Model.Detalle</span>
+        }
+        else
+        {
+            <span>Evaluación pendiente.</span>
+        }
+    </div>
+
+    <button class="btn btn-secondary" type="button" id="btnEvaluar">Evaluar</button>
+    <button class="btn btn-primary" type="submit" id="btnConfirmar" disabled="@(!Model.EvaluacionVigente)">Confirmar alta</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const prestamo = document.getElementById('PrestamoId');
+        const objeto = document.getElementById('ObjetoCelesteId');
+        const fecha = document.getElementById('Fecha');
+        const indicador = document.getElementById('indicador');
+        const detalle = document.getElementById('detalle');
+        const vigente = document.getElementById('evaluacionVigente');
+        const box = document.getElementById('evaluacionBox');
+        const confirmar = document.getElementById('btnConfirmar');
+        const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        function limpiarEvaluacion() {
+            indicador.value = '';
+            detalle.value = '';
+            vigente.value = 'false';
+            confirmar.disabled = true;
+            box.className = 'alert alert-secondary';
+            box.textContent = 'Evaluación pendiente.';
+        }
+
+        document.querySelectorAll('.eval-input').forEach(x => x.addEventListener('change', limpiarEvaluacion));
+
+        document.getElementById('btnEvaluar').addEventListener('click', async function () {
+            if (!prestamo.value || !objeto.value || !fecha.value) {
+                box.className = 'alert alert-warning';
+                box.textContent = 'Seleccione préstamo, objeto y fecha.';
+                return;
+            }
+
+            box.className = 'alert alert-secondary';
+            box.textContent = 'Evaluando...';
+
+            const response = await fetch('/Observaciones/Evaluar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': csrfToken
+                },
+                body: JSON.stringify({
+                    prestamoId: Number(prestamo.value),
+                    objetoCelesteId: Number(objeto.value),
+                    fecha: fecha.value
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                box.className = 'alert alert-danger';
+                box.textContent = data.mensaje ?? 'No se pudo evaluar.';
+                return;
+            }
+
+            indicador.value = data.indicador;
+            detalle.value = data.detalle;
+            vigente.value = 'true';
+            confirmar.disabled = false;
+            box.className = 'alert alert-info';
+            box.textContent = '';
+            const indicatorText = document.createElement('strong');
+            indicatorText.textContent = data.indicador;
+            box.append(indicatorText, ` ${data.detalle ?? ''}`);
+        });
+    </script>
+}

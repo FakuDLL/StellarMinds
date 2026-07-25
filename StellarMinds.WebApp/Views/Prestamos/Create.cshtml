@@ -1,0 +1,88 @@
+@model AltaPrestamoViewModel
+@{
+    ViewData["Title"] = "Alta préstamo";
+}
+
+<h1>Alta de préstamo</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form asp-action="Create" method="post" id="prestamoForm" class="col-md-8">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="SocioId" class="form-label">Socio</label>
+        <select asp-for="SocioId" class="form-select" asp-items="@(new SelectList(Model.Socios, "Id", "NombreCompleto"))">
+            <option value="">Seleccione socio</option>
+        </select>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="TelescopioId" class="form-label">Telescopio</label>
+            <select asp-for="TelescopioId" class="form-select equipo-select" data-tipo="telescopio" asp-items="@(new SelectList(Model.Telescopios, "Id", "Modelo"))">
+                <option value="">Seleccione telescopio</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="MonturaId" class="form-label">Montura</label>
+            <select asp-for="MonturaId" class="form-select equipo-select" data-tipo="montura" asp-items="@(new SelectList(Model.Monturas, "Id", "Modelo"))">
+                <option value="">Seleccione montura</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="CamaraId" class="form-label">Cámara</label>
+            <select asp-for="CamaraId" class="form-select equipo-select" data-tipo="camara" asp-items="@(new SelectList(Model.Camaras, "Id", "Modelo"))">
+                <option value="">Sin cámara</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="OcularId" class="form-label">Ocular</label>
+            <select asp-for="OcularId" class="form-select equipo-select" data-tipo="ocular" asp-items="@(new SelectList(Model.Oculares, "Id", "Modelo"))">
+                <option value="">Sin ocular</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="FechaInicio" class="form-label"></label>
+            <input asp-for="FechaInicio" class="form-control" type="date" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="FechaFin" class="form-label"></label>
+            <input asp-for="FechaFin" class="form-control" type="date" />
+        </div>
+    </div>
+    <div id="disponibilidad" class="alert d-none"></div>
+    <button class="btn btn-primary" type="submit">Crear préstamo</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        async function validarDisponibilidad() {
+            const mensajes = [];
+            let todoDisponible = true;
+            for (const select of document.querySelectorAll('.equipo-select')) {
+                if (!select.value) continue;
+                const tipo = select.dataset.tipo;
+                const response = await fetch(`/Prestamos/Disponibilidad?tipo=${tipo}&id=${select.value}`);
+                const data = await response.json();
+                mensajes.push(`${tipo}: ${data.mensaje ?? (data.disponible ? 'Disponible' : 'No disponible')}`);
+                if (!data.disponible) todoDisponible = false;
+            }
+            const box = document.getElementById('disponibilidad');
+            box.className = `alert ${todoDisponible ? 'alert-success' : 'alert-danger'}`;
+            box.textContent = mensajes.join(' | ');
+            return todoDisponible;
+        }
+
+        document.querySelectorAll('.equipo-select').forEach(x => x.addEventListener('change', validarDisponibilidad));
+        document.getElementById('prestamoForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (await validarDisponibilidad()) this.submit();
+        });
+    </script>
+}

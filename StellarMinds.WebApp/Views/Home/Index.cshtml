@@ -1,0 +1,17 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Inicio";
+    var rol = HttpContextAccessor.HttpContext?.Session.GetString("Rol");
+}
+
+<h1>StellarMinds</h1>
+
+
+@if (string.IsNullOrWhiteSpace(rol))
+{
+    <a class="btn btn-primary" asp-controller="Usuario" asp-action="Login">Ingresar</a>
+}
+else
+{
+    <p>Rol activo: <strong>@rol</strong></p>
+}
