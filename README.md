@@ -23,6 +23,15 @@ The solution combines a REST API and an ASP.NET Core MVC frontend with Entity Fr
 
 See [local setup](#puesta-en-marcha) to run the project and [the architecture](#arquitectura) for how the application is organized.
 
+### Project attribution and code tour
+
+StellarMinds was built as an academic team project. Facundo Robayna ([@FakuDLL](https://github.com/FakuDLL)) prepared the [public portfolio edition](https://github.com/FakuDLL/StellarMinds/commit/a387497) and its [English project overview](https://github.com/FakuDLL/StellarMinds/pull/8). These links point to representative parts of the team's implementation.
+
+- [REST API setup](SistemaStellarMinds/StellarMinds.WebApi/Program.cs) shows dependency registration and authentication configuration.
+- [Equipment loan use case](SistemaStellarMinds/StellarMinds.LogicaAplicacion/CasosUso/CUAltaPrestamo.cs) shows how a loan is created and recorded.
+- [Entity Framework Core context](SistemaStellarMinds/StellarMinds.AccesoDatos/ApplicationDbContext.cs) shows the data model and persistence configuration.
+- [Build workflow](.github/workflows/ci.yml) checks that the API and MVC application compile.
+
 ## El proyecto
 
 **StellarMinds** modela la operación de un observatorio y club de astronomía. La solución separa una API REST del cliente MVC y organiza el backend mediante capas, casos de uso, repositorios y un dominio con reglas propias.
