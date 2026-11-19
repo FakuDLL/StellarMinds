@@ -15,6 +15,14 @@
   Plataforma web para administrar socios, equipos astronómicos, préstamos y sesiones de observación, con evaluación técnica asistida por IA.
 </p>
 
+## Project overview
+
+**StellarMinds** is an academic web application for running an astronomy club. It manages members, equipment loans and observation sessions, and uses the Gemini API to evaluate whether a proposed equipment setup is suitable for an observation.
+
+The solution combines a REST API and an ASP.NET Core MVC frontend with Entity Framework Core and SQL Server. The repository includes a relational schema, fictional sample data, versioned migrations, and diagrams of the main workflows.
+
+See [local setup](#puesta-en-marcha) to run the project and [the architecture](#arquitectura) for how the application is organized.
+
 ## El proyecto
 
 **StellarMinds** modela la operación de un observatorio y club de astronomía. La solución separa una API REST del cliente MVC y organiza el backend mediante capas, casos de uso, repositorios y un dominio con reglas propias.
